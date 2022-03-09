@@ -14,6 +14,7 @@ namespace PanoramaToNetsis
         {
             InitializeComponent();
         }
+
         protected override void OnLoad(EventArgs e)
         {
             txtBaslangicTarihi.EditValue = DateTime.Now;
@@ -185,7 +186,7 @@ namespace PanoramaToNetsis
 
                     if (tahsilatlar.Count > 0)
                     {
-                        lblStatus.Caption = tahsilatlar.Count + " Adet Kayıt Listelendi.";
+                        lblStatus.Caption = $"{tahsilatlar.Count} Adet Kayıt Listelendi.";
 
                         return tahsilatlar;
                     }
@@ -244,43 +245,47 @@ namespace PanoramaToNetsis
                     }
                     foreach (var sRow in selectedRows)
                     {
-                        lblAktarimDurumu.Caption = "(" + aktarilan + " / " + selectedRowHandles.Length + ") Aktarıldı.";
+                        lblAktarimDurumu.Caption = $"({aktarilan} / {selectedRowHandles.Length}) Aktarıldı.";
+                        string MusteriUnvan = sRow.Musteri.ToString();
+                        var tahsilat = new TahsilatModel()
+                        {
+                            TahsilatID = sRow.Tahsilat_ID?.ToString(),
+                            CariKodu = sRow.Musteri_ID,
+                            FaturaNo = sRow.Fatura_No,
+                            Tutar = double.Parse(sRow.Tutar.ToString()),
+                            SatisTemsilciKodu = sRow.Temsilci_ID,
+                            Tarih = DateTime.Parse(sRow.Tarih.ToString()),
+                        };
+                        tahsilat.Aciklama = $"{MusteriUnvan} ({tahsilat.CariKodu})";
 
-                        string Tahsilat_ID = sRow.Tahsilat_ID?.ToString();
+                        lblStatus.Caption = $"{tahsilat.TahsilatID} Nolu tahsilat aktarılıyor";
+                        string TipID = sRow.Tip_ID?.ToString();
 
-                        lblStatus.Caption = Tahsilat_ID + " Nolu tahsilat aktarılıyor";
-                        string Tip_ID = sRow.Tip_ID?.ToString();
-                        string Kasa_Kod = sRow.Kasa.ToString();
-                        string Hesap_Havale_Kod = sRow.Havale_Hesap_No.ToString();
-                        string Cari_Kod = sRow.Musteri_ID.ToString();
-                        string Musteri_Unvan = sRow.Musteri.ToString();
-                        string Fatura_No = sRow.Fatura_No.ToString();
-                        double Tutar = double.Parse(sRow.Tutar.ToString());
-                        string ST_Kod = sRow.Temsilci_ID.ToString();
-                        var Tarih = DateTime.Parse(sRow.Tarih.ToString());
-                        string Aciklama = Musteri_Unvan + " (" + Cari_Kod + ")";
-                        string CHAciklama = sRow.Aciklama.ToString();
-                        string Banka_Adi = sRow.Banka.ToString();
-
-                        switch (Tip_ID)
+                        switch (TipID)
                         {
                             case "0":
-                                Result = Tahsilat.Nakit(Tahsilat_ID, Cari_Kod, Fatura_No, Tutar, ST_Kod, Tarih, Aciklama);
+                                Result = Tahsilat.Nakit(tahsilat);
                                 tahsilatTipi = "Nakit";
                                 break;
 
                             case "6":
-                                Result = Tahsilat.Kredi_Karti(Tahsilat_ID, Kasa_Kod, Cari_Kod, Fatura_No, Tutar, ST_Kod, Tarih, Aciklama, CHAciklama);
+                                tahsilat.KrediKartiKasaKodu = sRow.Kasa;
+                                tahsilat.CHAciklama = sRow.Aciklama;
+                                Result = Tahsilat.Kredi_Karti(tahsilat);
                                 tahsilatTipi = "Kredi Kartı";
                                 break;
 
                             case "13":
-                                Result = Tahsilat.Havale(Tahsilat_ID, Cari_Kod, Hesap_Havale_Kod, Fatura_No, Tutar, ST_Kod, Tarih, Aciklama, Banka_Adi);
+                                tahsilat.HesapHavaleKod = sRow.Havale_Hesap_No;
+                                tahsilat.BankaAdi = sRow.Banka;
+                                Result = Tahsilat.Havale(tahsilat);
                                 tahsilatTipi = "Havale Tahsilat";
                                 break;
 
                             case "14":
-                                Result = Tahsilat.Havale_Odeme(Tahsilat_ID, Cari_Kod, Hesap_Havale_Kod, Fatura_No, Tutar, ST_Kod, Tarih, Aciklama, Banka_Adi);
+                                tahsilat.HesapHavaleKod = sRow.Havale_Hesap_No;
+                                tahsilat.BankaAdi = sRow.Banka;
+                                Result = Tahsilat.Havale_Odeme(tahsilat);
                                 tahsilatTipi = "Havale Ödeme";
                                 break;
                         }
@@ -288,20 +293,20 @@ namespace PanoramaToNetsis
                         {
                             Kaynak = "Panorama",
                             Hedef = "Netsis",
-                            BelgeMatbu = Fatura_No,
-                            Tutar = Convert.ToDecimal(Tutar),
+                            BelgeMatbu = tahsilat.FaturaNo,
+                            Tutar = Convert.ToDecimal(tahsilat.Tutar),
                             BelgeTipi = $"Tahsilat - {tahsilatTipi}",
-                            KaynakBelgeID = Tahsilat_ID,
+                            KaynakBelgeID = tahsilat.TahsilatID,
                         };
                         if (!Result.Hatali)
                         {
                             kaydet.IslemTuru = "Sonuc";
                             kaydet.IslemDurumu = "Aktarildi";
-                            kaydet.IslemAciklamasi = Aciklama;
+                            kaydet.IslemAciklamasi = tahsilat.Aciklama;
 
                             dal.Kaydet(kaydet);
 
-                            lblStatus.Caption = Tahsilat_ID + " Nolu tahsilat aktarıldı";
+                            lblStatus.Caption = $"{tahsilat.TahsilatID}  Nolu tahsilat aktarıldı";
                         }
                         else
                         {

@@ -152,6 +152,8 @@
     <Compile Include="fMain.Designer.cs">
       <DependentUpon>fMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\SirketAyarModel.cs" />
+    <Compile Include="Model\TahsilatModel.cs" />
     <Compile Include="Model\TblAktarimSonucModel.cs" />
     <Compile Include="Model\NetsisAktarimModel.cs" />
     <Compile Include="Parametreler.cs">

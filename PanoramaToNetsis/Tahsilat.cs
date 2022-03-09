@@ -1,4 +1,5 @@
 ﻿using NetOpenX50;
+using PanoramaToNetsis.Model;
 using System;
 using System.Runtime.InteropServices;
 
@@ -6,30 +7,30 @@ namespace PanoramaToNetsis
 {
     public static class Tahsilat
     {
-        public static Result Kredi_Karti(string Tahsilat_ID, string Kredi_Karti_Kasa_Kodu, string Cari_Kodu, string Fatura_NO, double Tutar, string Satis_Temsilci_Kodu, DateTime Tarih, string Aciklama, string CHAciklama)
+        public static Result Kredi_Karti(TahsilatModel tahsilat)
         {
-            Result Result = new Result();
-            Kernel kernel = new Kernel();
-            Sirket sirket = default(Sirket);
-            Kasa kasa = default(Kasa);
+            var Result = new Result();
+            var kernel = new Kernel();
+            var sirket = default(Sirket);
+            var kasa = default(Kasa);
             try
             {
                 sirket = kernel.yeniSirket(TVTTipi.vtMSSQL, Ayarlar.NetsisDBDatabase, Ayarlar.NetsisDBUser, Ayarlar.NetsisDBPassword, Ayarlar.NetsisKullaniciAdi, Ayarlar.NetsisSifre, Ayarlar.NetsisSube);
                 kasa = kernel.yeniKasa(sirket);
 
-                kasa.KsMas_Kod = Kredi_Karti_Kasa_Kodu;
+                kasa.KsMas_Kod = tahsilat.KrediKartiKasaKodu;
                 kasa.IO = "G";
                 kasa.Tip = "C";
-                kasa.Kod = Cari_Kodu;
-                kasa.Fisno = Fatura_NO;
-                kasa.Tutar = Tutar;
-                kasa.Plasiyer_Kodu = Satis_Temsilci_Kodu;
-                kasa.Tarih = Tarih.Date;
-                kasa.Aciklama = Aciklama + " (" + Cari_Kodu + ")";
-                kasa.CariHareketAciklama = CHAciklama;
+                kasa.Kod = tahsilat.CariKodu;
+                kasa.Fisno = tahsilat.FaturaNo;
+                kasa.Tutar = tahsilat.Tutar;
+                kasa.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
+                kasa.Tarih = tahsilat.Tarih.Date;
+                kasa.Aciklama = tahsilat.Aciklama + " (" + tahsilat.CariKodu + ")";
+                kasa.CariHareketAciklama = tahsilat.CHAciklama;
                 kasa.Islem(TKasaIslem.tkCariOdeme);
 
-                Result = new Result(false, 0, "Tahsilat.Kredi_Karti", Tahsilat_ID + " Nolu kredi kartı tahsilatı aktarıldı.", null);
+                Result = new Result(false, 0, "Tahsilat.Kredi_Karti", tahsilat.TahsilatID + " Nolu kredi kartı tahsilatı aktarıldı.", null);
             }
             catch (Exception ex)
             {
@@ -40,7 +41,7 @@ namespace PanoramaToNetsis
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Kredi_Karti", Tahsilat_ID + " Nolu kredi kartı tahsilatı aktarılamadı. (" + mesaj + ")", null);
+                Result = new Result(true, 1, "Tahsilat.Kredi_Karti", tahsilat.TahsilatID + " Nolu kredi kartı tahsilatı aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
@@ -55,12 +56,12 @@ namespace PanoramaToNetsis
             return Result;
         }
 
-        public static Result Nakit(string Tahsilat_ID, string Cari_Kodu, string Fatura_NO, double Tutar, string Satis_Temsilci_Kodu, DateTime Tarih, string Aciklama)
+        public static Result Nakit(TahsilatModel tahsilat)
         {
-            Result Result = new Result();
-            Kernel kernel = new Kernel();
-            Sirket sirket = default(Sirket);
-            Kasa kasa = default(Kasa);
+            var Result = new Result();
+            var kernel = new Kernel();
+            var sirket = default(Sirket);
+            var kasa = default(Kasa);
             try
             {
                 sirket = kernel.yeniSirket(TVTTipi.vtMSSQL, Ayarlar.NetsisDBDatabase, Ayarlar.NetsisDBUser, Ayarlar.NetsisDBPassword, Ayarlar.NetsisKullaniciAdi, Ayarlar.NetsisSifre, Ayarlar.NetsisSube);
@@ -69,14 +70,14 @@ namespace PanoramaToNetsis
                 kasa.KsMas_Kod = Ayarlar.NetsisNakitKasaKodu;
                 kasa.IO = "G";
                 kasa.Tip = "C";
-                kasa.Kod = Cari_Kodu;
-                kasa.Fisno = Fatura_NO;
-                kasa.Tutar = Tutar;
-                kasa.Plasiyer_Kodu = Satis_Temsilci_Kodu;
-                kasa.Tarih = Tarih.Date;
-                kasa.Aciklama = Aciklama + " (" + Cari_Kodu + ")";
+                kasa.Kod = tahsilat.CariKodu;
+                kasa.Fisno = tahsilat.FaturaNo;
+                kasa.Tutar = tahsilat.Tutar;
+                kasa.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
+                kasa.Tarih = tahsilat.Tarih.Date;
+                kasa.Aciklama = tahsilat.Aciklama + " (" + tahsilat.CariKodu + ")";
                 kasa.Islem(TKasaIslem.tkCariOdeme);
-                Result = new Result(false, 0, "Tahsilat.Nakit", Tahsilat_ID + " Nolu nakit tahsilatı aktarıldı.", null);
+                Result = new Result(false, 0, "Tahsilat.Nakit", tahsilat.TahsilatID + " Nolu nakit tahsilatı aktarıldı.", null);
             }
             catch (Exception ex)
             {
@@ -87,7 +88,7 @@ namespace PanoramaToNetsis
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Nakit", Tahsilat_ID + " Nolu nakit tahsilatı aktarılamadı. (" + mesaj + ")", null);
+                Result = new Result(true, 1, "Tahsilat.Nakit", tahsilat.TahsilatID + " Nolu nakit tahsilatı aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
@@ -192,15 +193,15 @@ namespace PanoramaToNetsis
         //    return Result;
         //}
 
-        public static Result Havale(string Tahsilat_ID, string Cari_Kodu, string Banka_Kodu, string Fatura_NO, double Tutar, string Satis_Temsilci_Kodu, DateTime Tarih, string Aciklama, string Banka_Adi)
+        public static Result Havale(TahsilatModel tahsilat)
         {
-            Result Result = new Result();
-            Kernel kernel = new Kernel();
-            Sirket sirket = default(Sirket);
+            var Result = new Result();
+            var kernel = new Kernel();
+            var sirket = default(Sirket);
             // Dekomas DekSabit = default(Dekomas);
-            Dekont dekontA = default(Dekont);
-            Dekont dekontB = default(Dekont);
-            Dekomas DekSabit = default(Dekomas);
+            var dekontA = default(Dekont);
+            var dekontB = default(Dekont);
+            var DekSabit = default(Dekomas);
 
             try
             {
@@ -212,35 +213,35 @@ namespace PanoramaToNetsis
                 DekSabit.Dekont_No = DekontNo;
                 DekSabit.OtoVadeGunu = false;
                 dekontA = DekSabit.KalemEkle(TDekontTip.dekCari);
-                dekontA.Kod = Cari_Kodu;
+                dekontA.Kod = tahsilat.CariKodu;
                 dekontA.C_M = "C";
                 dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontA.Aciklama1 = Banka_Adi + " Gelen Havale";
+                dekontA.Aciklama1 = tahsilat.BankaAdi + " Gelen Havale";
                 dekontA.ValorGun = 0;
-                dekontA.ValorTrh = Tarih.Date;
+                dekontA.ValorTrh = tahsilat.Tarih.Date;
                 dekontA.OtoVadeGunuGetir = false;
                 dekontA.DovTL = "T";
-                dekontA.Tutar = Tutar;
-                dekontA.Tarih = Tarih.Date;
+                dekontA.Tutar = tahsilat.Tutar;
+                dekontA.Tarih = tahsilat.Tarih.Date;
 
                 dekontA.Belge_Tipi = "Banka";
                 dekontA.Odeme_Turu = "Havale";
-                dekontA.Plasiyer = Satis_Temsilci_Kodu;
+                dekontA.Plasiyer = tahsilat.SatisTemsilciKodu;
                 /////////////////////////////////////////////
                 dekontB = DekSabit.KalemEkle(TDekontTip.dekBanka);
-                dekontB.Kod = Banka_Kodu;
+                dekontB.Kod = tahsilat.HesapHavaleKod;
                 dekontB.C_M = "B";
                 dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontB.Aciklama1 = Aciklama;
+                dekontB.Aciklama1 = tahsilat.Aciklama;
                 dekontB.ValorGun = 0;
-                dekontB.ValorTrh = Tarih.Date;
+                dekontB.ValorTrh = tahsilat.Tarih.Date;
                 dekontB.OtoVadeGunuGetir = false;
                 dekontB.DovTL = "T";
-                dekontB.Tutar = Tutar;
-                dekontB.Tarih = Tarih.Date;
+                dekontB.Tutar = tahsilat.Tutar;
+                dekontB.Tarih = tahsilat.Tarih.Date;
                 dekontB.Belge_Tipi = "Banka";
                 dekontB.Odeme_Turu = "Havale";
-                dekontB.Plasiyer = Satis_Temsilci_Kodu;
+                dekontB.Plasiyer = tahsilat.SatisTemsilciKodu;
                 if (BA == "B")
                 {
                     dekontA.B_A = "A";
@@ -253,7 +254,7 @@ namespace PanoramaToNetsis
                 }
                 DekSabit.Tamamla();
 
-                Result = new Result(false, 0, "Tahsilat.Havale", Tahsilat_ID + " Nolu havale tahsilatı aktarıldı.", null);
+                Result = new Result(false, 0, "Tahsilat.Havale", tahsilat.TahsilatID + " Nolu havale tahsilatı aktarıldı.", null);
             }
             catch (Exception ex)
             {
@@ -264,7 +265,7 @@ namespace PanoramaToNetsis
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Havale", Tahsilat_ID + " Nolu havale tahsilatı aktarılamadı. (" + mesaj + ")", null);
+                Result = new Result(true, 1, "Tahsilat.Havale", tahsilat.TahsilatID + " Nolu havale tahsilatı aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
@@ -283,15 +284,15 @@ namespace PanoramaToNetsis
             return Result;
         }
 
-        public static Result Havale_Odeme(string Tahsilat_ID, string Cari_Kodu, string Banka_Kodu, string Fatura_NO, double Tutar, string Satis_Temsilci_Kodu, DateTime Tarih, string Aciklama, string Banka_Adi)
+        public static Result Havale_Odeme(TahsilatModel tahsilat)
         {
-            Result Result = new Result();
-            Kernel kernel = new Kernel();
-            Sirket sirket = default(Sirket);
+            var Result = new Result();
+            var kernel = new Kernel();
+            var sirket = default(Sirket);
             // Dekomas DekSabit = default(Dekomas);
-            Dekont dekontA = default(Dekont);
-            Dekont dekontB = default(Dekont);
-            Dekomas DekSabit = default(Dekomas);
+            var dekontA = default(Dekont);
+            var dekontB = default(Dekont);
+            var DekSabit = default(Dekomas);
 
             try
             {
@@ -303,34 +304,34 @@ namespace PanoramaToNetsis
                 DekSabit.Dekont_No = DekontNo;
                 DekSabit.OtoVadeGunu = false;
                 dekontA = DekSabit.KalemEkle(TDekontTip.dekCari);
-                dekontA.Kod = Cari_Kodu;
+                dekontA.Kod = tahsilat.CariKodu;
                 dekontA.C_M = "C";
                 dekontA.OtoVadeGunuGetir = false;
                 dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontA.Aciklama1 = Banka_Adi + " Giden Havale";
+                dekontA.Aciklama1 = tahsilat.BankaAdi + " Giden Havale";
                 dekontA.ValorGun = 0;
-                dekontA.ValorTrh = Tarih.Date;
+                dekontA.ValorTrh = tahsilat.Tarih.Date;
                 dekontA.DovTL = "T";
-                dekontA.Tutar = Tutar;
-                dekontA.Tarih = Tarih.Date;
+                dekontA.Tutar = tahsilat.Tutar;
+                dekontA.Tarih = tahsilat.Tarih.Date;
                 dekontA.Belge_Tipi = "Banka";
                 dekontA.Odeme_Turu = "Havale";
-                dekontA.Plasiyer = Satis_Temsilci_Kodu;
+                dekontA.Plasiyer = tahsilat.SatisTemsilciKodu;
                 /////////////////////////////////////////////
                 dekontB = DekSabit.KalemEkle(TDekontTip.dekBanka);
-                dekontB.Kod = Banka_Kodu;
+                dekontB.Kod = tahsilat.HesapHavaleKod;
                 dekontB.C_M = "B";
                 dekontB.OtoVadeGunuGetir = false;
                 dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontB.Aciklama1 = Aciklama;
+                dekontB.Aciklama1 = tahsilat.Aciklama;
                 dekontB.ValorGun = 0;
-                dekontB.ValorTrh = Tarih.Date;
+                dekontB.ValorTrh = tahsilat.Tarih.Date;
                 dekontB.DovTL = "T";
-                dekontB.Tutar = Tutar;
-                dekontB.Tarih = Tarih.Date;
+                dekontB.Tutar = tahsilat.Tutar;
+                dekontB.Tarih = tahsilat.Tarih.Date;
                 dekontB.Belge_Tipi = "Banka";
                 dekontB.Odeme_Turu = "Havale";
-                dekontB.Plasiyer = Satis_Temsilci_Kodu;
+                dekontB.Plasiyer = tahsilat.SatisTemsilciKodu;
                 if (BA == "B")
                 {
                     dekontA.B_A = "A";
@@ -343,7 +344,7 @@ namespace PanoramaToNetsis
                 }
                 DekSabit.Tamamla();
 
-                Result = new Result(false, 0, "Tahsilat.Havale_Odeme", Tahsilat_ID + " Nolu havale ödemesi aktarıldı.", null);
+                Result = new Result(false, 0, "Tahsilat.Havale_Odeme", tahsilat.TahsilatID + " Nolu havale ödemesi aktarıldı.", null);
             }
             catch (Exception ex)
             {
@@ -354,7 +355,7 @@ namespace PanoramaToNetsis
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Havale_Odeme", Tahsilat_ID + " Nolu havale ödemesi aktarılamadı. (" + mesaj + ")", null);
+                Result = new Result(true, 1, "Tahsilat.Havale_Odeme", tahsilat.TahsilatID + " Nolu havale ödemesi aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
