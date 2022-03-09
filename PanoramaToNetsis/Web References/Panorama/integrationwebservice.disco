@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="https://nsdm-msds.com/integrationwebservice.asmx?wsdl" docRef="https://nsdm-msds.com/integrationwebservice.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="https://nsdm-msds.com/integrationwebservice.asmx" xmlns:q1="http://integration.univera.com.tr" binding="q1:IntegrationWebServiceSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="https://nsdm-msds.com/integrationwebservice.asmx" xmlns:q2="http://integration.univera.com.tr" binding="q2:IntegrationWebServiceSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
