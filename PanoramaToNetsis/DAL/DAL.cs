@@ -1,4 +1,4 @@
-﻿using PanoramaToNetsis.Model;
+﻿using PanoramaToNetsis.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -13,15 +13,16 @@ namespace PanoramaToNetsis
         {
             try
             {
-                Ayarlar.Getir();
-                baglanti = new SqlConnection($"Data Source={Ayarlar.LogServer};Initial Catalog={Ayarlar.LogDB};User Id={Ayarlar.LogKullaniciAdi};Password={Ayarlar.LogSifre};");
+                var parametreAyarlari = new ParametreAyarlari();
+                var parametreler = parametreAyarlari.Getir();
+                baglanti = new SqlConnection($"Data Source={parametreler.LogServer};Initial Catalog={parametreler.LogDB};User Id={parametreler.LogKullaniciAdi};Password={parametreler.LogSifre};");
 
                 baglanti.Open();
             }
             catch (Exception e)
             {
                 string mesaj = e.ToString();
-                new Result(true, 1, "SQLBaglanti", mesaj, null);
+                new LogKaydet(true, 1, "SQLBaglanti", mesaj, null);
                 baglanti.Close();
             }
         }
@@ -52,7 +53,7 @@ namespace PanoramaToNetsis
             catch (Exception e)
             {
                 string mesaj = e.ToString();
-                new Result(true, 1, "NetsisAktarim", mesaj, null);
+                new LogKaydet(true, 1, "NetsisAktarim", mesaj, null);
             }
         }
 
@@ -86,7 +87,7 @@ namespace PanoramaToNetsis
             catch (Exception e)
             {
                 string mesaj = e.ToString();
-                new Result(true, 1, "NetsisAktarim", mesaj, null);
+                new LogKaydet(true, 1, "NetsisAktarim", mesaj, null);
                 return null;
             }
         }
@@ -108,7 +109,7 @@ namespace PanoramaToNetsis
             catch (Exception e)
             {
                 string mesaj = e.ToString();
-                new Result(true, 1, "NetsisAktarimHataLog", mesaj, null);
+                new LogKaydet(true, 1, "NetsisAktarimHataLog", mesaj, null);
             }
         }
 
@@ -146,7 +147,7 @@ namespace PanoramaToNetsis
             catch (Exception e)
             {
                 string mesaj = e.ToString();
-                new Result(true, 1, "NetsisAktarimSonuc", mesaj, null);
+                new LogKaydet(true, 1, "NetsisAktarimSonuc", mesaj, null);
                 return null;
             }
         }

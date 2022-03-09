@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace PanoramaToNetsis
 {
-    public class Result
+    public class LogKaydet
     {
         public bool Hatali { get; set; }
         public int Kod { get; set; }
@@ -13,7 +13,7 @@ namespace PanoramaToNetsis
         public string Mesaj { get; set; }
         public object Model { get; set; }
 
-        public Result(bool Hatali = true, int Kod = -1, string Kaynak = "Result", string Mesaj = "Not set result", object Model = null)
+        public LogKaydet(bool Hatali = true, int Kod = -1, string Kaynak = "Result", string Mesaj = "Not set result", object Model = null)
         {
             this.Hatali = Hatali;
             this.Kod = Kod;
@@ -25,7 +25,7 @@ namespace PanoramaToNetsis
                     Log_Kayit(this);
         }
 
-        private void Log_Kayit(Result Result)
+        private void Log_Kayit(LogKaydet Result)
         {
             string yil = DateTime.Now.Year.ToString();
             string ay = "";
@@ -39,18 +39,18 @@ namespace PanoramaToNetsis
             else
                 gun = DateTime.Now.Day.ToString();
 
-            string Log_Klasor = Application.StartupPath + "\\Log";
-            if (!Directory.Exists(Log_Klasor))
-                Directory.CreateDirectory(Log_Klasor);
-            string Log_Dosya = Log_Klasor + "\\" + yil + ay + gun + ".txt";
-            if (!File.Exists(Log_Dosya))
+            string LogKlasor = Application.StartupPath + "\\Log";
+            if (!Directory.Exists(LogKlasor))
+                Directory.CreateDirectory(LogKlasor);
+            string LogDosya = LogKlasor + "\\" + yil + ay + gun + ".txt";
+            if (!File.Exists(LogDosya))
             {
-                var Dosya = File.Create(Log_Dosya);
+                var Dosya = File.Create(LogDosya);
                 Dosya.Close();
             }
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(DateTime.Now.ToString() + "\t" + Result.Kaynak + "\t" + Result.Kod + "\t" + Result.Mesaj);
-            File.AppendAllText(Log_Dosya, sb.ToString());
+            File.AppendAllText(LogDosya, sb.ToString());
         }
     }
 }

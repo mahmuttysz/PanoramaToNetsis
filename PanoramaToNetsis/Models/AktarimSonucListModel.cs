@@ -1,4 +1,5 @@
-﻿namespace PanoramaToNetsis.Model
+﻿namespace PanoramaToNetsis.Models
+
 {
     public class AktarimSonucListModel
     {

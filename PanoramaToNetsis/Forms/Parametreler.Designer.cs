@@ -36,24 +36,24 @@ namespace PanoramaToNetsis
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
-            this.txt_Netsis_Senet_Kasa_Kodu = new System.Windows.Forms.TextBox();
+            this.txtNetsisSenetKasaKodu = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.txt_Netsis_Cek_Kasa_Kodu = new System.Windows.Forms.TextBox();
+            this.txtNetsisCekKasaKodu = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.txt_Netsis_Nakit_Kasa_Kodu = new System.Windows.Forms.TextBox();
+            this.txtNetsisNakitKasaKodu = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.txt_Netsis_Sube = new System.Windows.Forms.TextBox();
+            this.txtNetsisSube = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.txt_Netsis_Sifre = new System.Windows.Forms.TextBox();
+            this.txtNetsisSifre = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.txt_Netsis_Kullanici_Adi = new System.Windows.Forms.TextBox();
+            this.txtNetsisKullaniciAdi = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.txt_Netsis_DB_Password = new System.Windows.Forms.TextBox();
+            this.txtNetsisDBPassword = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.txt_Netsis_DB_User = new System.Windows.Forms.TextBox();
+            this.txtNetsisDBUser = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.txt_Netsis_Database = new System.Windows.Forms.TextBox();
+            this.txtNetsisDatabase = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.txtLogServer = new System.Windows.Forms.TextBox();
             this.txtLogDB = new System.Windows.Forms.TextBox();
@@ -135,24 +135,24 @@ namespace PanoramaToNetsis
             // 
             // splitContainerControl1.Panel1
             // 
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_Senet_Kasa_Kodu);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisSenetKasaKodu);
             this.splitContainerControl1.Panel1.Controls.Add(this.label14);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_Cek_Kasa_Kodu);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisCekKasaKodu);
             this.splitContainerControl1.Panel1.Controls.Add(this.label13);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_Nakit_Kasa_Kodu);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisNakitKasaKodu);
             this.splitContainerControl1.Panel1.Controls.Add(this.label12);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_Sube);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisSube);
             this.splitContainerControl1.Panel1.Controls.Add(this.label11);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_Sifre);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisSifre);
             this.splitContainerControl1.Panel1.Controls.Add(this.label6);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_Kullanici_Adi);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisKullaniciAdi);
             this.splitContainerControl1.Panel1.Controls.Add(this.label7);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_DB_Password);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisDBPassword);
             this.splitContainerControl1.Panel1.Controls.Add(this.label8);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_DB_User);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisDBUser);
             this.splitContainerControl1.Panel1.Controls.Add(this.label9);
             this.splitContainerControl1.Panel1.Controls.Add(this.label10);
-            this.splitContainerControl1.Panel1.Controls.Add(this.txt_Netsis_Database);
+            this.splitContainerControl1.Panel1.Controls.Add(this.txtNetsisDatabase);
             this.splitContainerControl1.Panel1.Controls.Add(this.label17);
             this.splitContainerControl1.Panel1.Controls.Add(this.txtLogServer);
             this.splitContainerControl1.Panel1.Controls.Add(this.txtLogDB);
@@ -185,11 +185,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_Senet_Kasa_Kodu
             // 
-            this.txt_Netsis_Senet_Kasa_Kodu.Location = new System.Drawing.Point(736, 270);
-            this.txt_Netsis_Senet_Kasa_Kodu.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_Senet_Kasa_Kodu.Name = "txt_Netsis_Senet_Kasa_Kodu";
-            this.txt_Netsis_Senet_Kasa_Kodu.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_Senet_Kasa_Kodu.TabIndex = 145;
+            this.txtNetsisSenetKasaKodu.Location = new System.Drawing.Point(736, 270);
+            this.txtNetsisSenetKasaKodu.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisSenetKasaKodu.Name = "txt_Netsis_Senet_Kasa_Kodu";
+            this.txtNetsisSenetKasaKodu.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisSenetKasaKodu.TabIndex = 145;
             // 
             // label14
             // 
@@ -203,11 +203,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_Cek_Kasa_Kodu
             // 
-            this.txt_Netsis_Cek_Kasa_Kodu.Location = new System.Drawing.Point(736, 238);
-            this.txt_Netsis_Cek_Kasa_Kodu.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_Cek_Kasa_Kodu.Name = "txt_Netsis_Cek_Kasa_Kodu";
-            this.txt_Netsis_Cek_Kasa_Kodu.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_Cek_Kasa_Kodu.TabIndex = 143;
+            this.txtNetsisCekKasaKodu.Location = new System.Drawing.Point(736, 238);
+            this.txtNetsisCekKasaKodu.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisCekKasaKodu.Name = "txt_Netsis_Cek_Kasa_Kodu";
+            this.txtNetsisCekKasaKodu.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisCekKasaKodu.TabIndex = 143;
             // 
             // label13
             // 
@@ -221,11 +221,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_Nakit_Kasa_Kodu
             // 
-            this.txt_Netsis_Nakit_Kasa_Kodu.Location = new System.Drawing.Point(736, 206);
-            this.txt_Netsis_Nakit_Kasa_Kodu.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_Nakit_Kasa_Kodu.Name = "txt_Netsis_Nakit_Kasa_Kodu";
-            this.txt_Netsis_Nakit_Kasa_Kodu.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_Nakit_Kasa_Kodu.TabIndex = 141;
+            this.txtNetsisNakitKasaKodu.Location = new System.Drawing.Point(736, 206);
+            this.txtNetsisNakitKasaKodu.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisNakitKasaKodu.Name = "txt_Netsis_Nakit_Kasa_Kodu";
+            this.txtNetsisNakitKasaKodu.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisNakitKasaKodu.TabIndex = 141;
             // 
             // label12
             // 
@@ -239,11 +239,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_Sube
             // 
-            this.txt_Netsis_Sube.Location = new System.Drawing.Point(736, 174);
-            this.txt_Netsis_Sube.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_Sube.Name = "txt_Netsis_Sube";
-            this.txt_Netsis_Sube.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_Sube.TabIndex = 139;
+            this.txtNetsisSube.Location = new System.Drawing.Point(736, 174);
+            this.txtNetsisSube.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisSube.Name = "txt_Netsis_Sube";
+            this.txtNetsisSube.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisSube.TabIndex = 139;
             // 
             // label11
             // 
@@ -257,11 +257,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_Sifre
             // 
-            this.txt_Netsis_Sifre.Location = new System.Drawing.Point(736, 142);
-            this.txt_Netsis_Sifre.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_Sifre.Name = "txt_Netsis_Sifre";
-            this.txt_Netsis_Sifre.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_Sifre.TabIndex = 137;
+            this.txtNetsisSifre.Location = new System.Drawing.Point(736, 142);
+            this.txtNetsisSifre.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisSifre.Name = "txt_Netsis_Sifre";
+            this.txtNetsisSifre.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisSifre.TabIndex = 137;
             // 
             // label6
             // 
@@ -275,11 +275,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_Kullanici_Adi
             // 
-            this.txt_Netsis_Kullanici_Adi.Location = new System.Drawing.Point(736, 110);
-            this.txt_Netsis_Kullanici_Adi.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_Kullanici_Adi.Name = "txt_Netsis_Kullanici_Adi";
-            this.txt_Netsis_Kullanici_Adi.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_Kullanici_Adi.TabIndex = 135;
+            this.txtNetsisKullaniciAdi.Location = new System.Drawing.Point(736, 110);
+            this.txtNetsisKullaniciAdi.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisKullaniciAdi.Name = "txt_Netsis_Kullanici_Adi";
+            this.txtNetsisKullaniciAdi.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisKullaniciAdi.TabIndex = 135;
             // 
             // label7
             // 
@@ -293,11 +293,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_DB_Password
             // 
-            this.txt_Netsis_DB_Password.Location = new System.Drawing.Point(736, 78);
-            this.txt_Netsis_DB_Password.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_DB_Password.Name = "txt_Netsis_DB_Password";
-            this.txt_Netsis_DB_Password.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_DB_Password.TabIndex = 133;
+            this.txtNetsisDBPassword.Location = new System.Drawing.Point(736, 78);
+            this.txtNetsisDBPassword.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisDBPassword.Name = "txt_Netsis_DB_Password";
+            this.txtNetsisDBPassword.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisDBPassword.TabIndex = 133;
             // 
             // label8
             // 
@@ -311,11 +311,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_DB_User
             // 
-            this.txt_Netsis_DB_User.Location = new System.Drawing.Point(736, 46);
-            this.txt_Netsis_DB_User.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_DB_User.Name = "txt_Netsis_DB_User";
-            this.txt_Netsis_DB_User.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_DB_User.TabIndex = 131;
+            this.txtNetsisDBUser.Location = new System.Drawing.Point(736, 46);
+            this.txtNetsisDBUser.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisDBUser.Name = "txt_Netsis_DB_User";
+            this.txtNetsisDBUser.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisDBUser.TabIndex = 131;
             // 
             // label9
             // 
@@ -339,11 +339,11 @@ namespace PanoramaToNetsis
             // 
             // txt_Netsis_Database
             // 
-            this.txt_Netsis_Database.Location = new System.Drawing.Point(736, 14);
-            this.txt_Netsis_Database.Margin = new System.Windows.Forms.Padding(4);
-            this.txt_Netsis_Database.Name = "txt_Netsis_Database";
-            this.txt_Netsis_Database.Size = new System.Drawing.Size(173, 23);
-            this.txt_Netsis_Database.TabIndex = 128;
+            this.txtNetsisDatabase.Location = new System.Drawing.Point(736, 14);
+            this.txtNetsisDatabase.Margin = new System.Windows.Forms.Padding(4);
+            this.txtNetsisDatabase.Name = "txt_Netsis_Database";
+            this.txtNetsisDatabase.Size = new System.Drawing.Size(173, 23);
+            this.txtNetsisDatabase.TabIndex = 128;
             // 
             // label17
             // 
@@ -557,24 +557,24 @@ namespace PanoramaToNetsis
         private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar;
         private DevExpress.XtraBars.BarButtonItem btnKaydet;
         private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
-        private System.Windows.Forms.TextBox txt_Netsis_Senet_Kasa_Kodu;
+        private System.Windows.Forms.TextBox txtNetsisSenetKasaKodu;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox txt_Netsis_Cek_Kasa_Kodu;
+        private System.Windows.Forms.TextBox txtNetsisCekKasaKodu;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox txt_Netsis_Nakit_Kasa_Kodu;
+        private System.Windows.Forms.TextBox txtNetsisNakitKasaKodu;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox txt_Netsis_Sube;
+        private System.Windows.Forms.TextBox txtNetsisSube;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox txt_Netsis_Sifre;
+        private System.Windows.Forms.TextBox txtNetsisSifre;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox txt_Netsis_Kullanici_Adi;
+        private System.Windows.Forms.TextBox txtNetsisKullaniciAdi;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txt_Netsis_DB_Password;
+        private System.Windows.Forms.TextBox txtNetsisDBPassword;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox txt_Netsis_DB_User;
+        private System.Windows.Forms.TextBox txtNetsisDBUser;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox txt_Netsis_Database;
+        private System.Windows.Forms.TextBox txtNetsisDatabase;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox txtLogServer;
         private System.Windows.Forms.TextBox txtLogDB;

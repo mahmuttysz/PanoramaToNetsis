@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PanoramaToNetsis</RootNamespace>
     <AssemblyName>PanoramaToNetsis</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -49,7 +49,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -127,39 +127,40 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\AktarimListModel.cs" />
-    <Compile Include="AktarimSonuc.cs">
+    <Compile Include="Models\AktarimListModel.cs" />
+    <Compile Include="Forms\AktarimSonuc.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AktarimSonuc.Designer.cs">
+    <Compile Include="Forms\AktarimSonuc.Designer.cs">
       <DependentUpon>AktarimSonuc.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\AktarimSonucListModel.cs" />
-    <Compile Include="Ayarlar.cs" />
+    <Compile Include="Models\AktarimSonucListModel.cs" />
+    <Compile Include="Models\ParametreAyarlariModel.cs" />
+    <Compile Include="ParametreAyarlari.cs" />
     <Compile Include="CustomGridView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DAL.cs" />
-    <Compile Include="Aktarim.cs">
+    <Compile Include="DAL\DAL.cs" />
+    <Compile Include="Forms\Aktarim.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Aktarim.Designer.cs">
+    <Compile Include="Forms\Aktarim.Designer.cs">
       <DependentUpon>Aktarim.cs</DependentUpon>
     </Compile>
-    <Compile Include="fMain.cs">
+    <Compile Include="Forms\fMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="fMain.Designer.cs">
+    <Compile Include="Forms\fMain.Designer.cs">
       <DependentUpon>fMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\SirketAyarModel.cs" />
-    <Compile Include="Model\TahsilatModel.cs" />
-    <Compile Include="Model\TblAktarimSonucModel.cs" />
-    <Compile Include="Model\NetsisAktarimModel.cs" />
-    <Compile Include="Parametreler.cs">
+    <Compile Include="Models\SirketAyarModel.cs" />
+    <Compile Include="Models\TahsilatModel.cs" />
+    <Compile Include="Models\TblAktarimSonucModel.cs" />
+    <Compile Include="Models\NetsisAktarimModel.cs" />
+    <Compile Include="Forms\Parametreler.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Parametreler.Designer.cs">
+    <Compile Include="Forms\Parametreler.Designer.cs">
       <DependentUpon>Parametreler.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -169,23 +170,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Result.cs" />
+    <Compile Include="LogKaydet.cs" />
     <Compile Include="Tahsilat.cs" />
     <Compile Include="Web References\Panorama\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Aktarim.resx">
+    <EmbeddedResource Include="Forms\Aktarim.resx">
       <DependentUpon>Aktarim.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AktarimSonuc.resx">
+    <EmbeddedResource Include="Forms\AktarimSonuc.resx">
       <DependentUpon>AktarimSonuc.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="fMain.resx">
+    <EmbeddedResource Include="Forms\fMain.resx">
       <DependentUpon>fMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Parametreler.resx">
+    <EmbeddedResource Include="Forms\Parametreler.resx">
       <DependentUpon>Parametreler.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
@@ -253,7 +254,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="logo.ico" />
     <Content Include="Resources\logo.ico" />
     <None Include="Resources\logo.png" />
   </ItemGroup>

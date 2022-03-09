@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PanoramaToNetsis.Model
+namespace PanoramaToNetsis.Models
 {
     public class TahsilatModel
     {
@@ -9,6 +9,8 @@ namespace PanoramaToNetsis.Model
         public string CariKodu { get; set; }
         public string FaturaNo { get; set; }
         public string HesapHavaleKod { get; set; }
+        public string CekNo { get; set; }
+        public string SenetNo { get; set; }
         public string BankaAdi { get; set; }
         public double Tutar { get; set; }
         public string SatisTemsilciKodu { get; set; }

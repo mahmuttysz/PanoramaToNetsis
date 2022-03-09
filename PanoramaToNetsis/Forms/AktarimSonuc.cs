@@ -43,7 +43,7 @@ namespace PanoramaToNetsis
             }
             catch (Exception ex)
             {
-                Result result = new Result();
+                LogKaydet result = new LogKaydet();
                 string mesaj = ex.Message;
                 if (ex.InnerException != null)
                 {
@@ -52,7 +52,7 @@ namespace PanoramaToNetsis
                         mesaj += ex.InnerException.InnerException.Message;
                 }
 
-                result = new Result(true, 1, "btnAktarimSonuc", mesaj, null);
+                result = new LogKaydet(true, 1, "btnAktarimSonuc", mesaj, null);
                
             }
             finally

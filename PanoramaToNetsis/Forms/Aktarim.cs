@@ -1,4 +1,4 @@
-﻿using PanoramaToNetsis.Model;
+﻿using PanoramaToNetsis.Models;
 using PanoramaToNetsis.Panorama;
 using System;
 using System.Collections.Generic;
@@ -33,13 +33,17 @@ namespace PanoramaToNetsis
             prgMarquee.Stopped = false;
         }
 
-        private async void BtnTahsilatGetir_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private async void BtnTahsilatGetirClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            Result Result = new Result();
+            LogKaydet Result = new LogKaydet();
             PStart();
+
+            var parametreAyarlari = new ParametreAyarlari();
+            var parametreler = parametreAyarlari.Getir();
+
             try
             {
-                Ayarlar.Getir();
+                
                 var asyncTahsilatlar = await Task.Run(() =>
                 {
                     lblStatus.Caption = "Kayıtlar listeleniyor.";
@@ -47,9 +51,9 @@ namespace PanoramaToNetsis
                     btnTahsilatGetir.Enabled = false;
 
                     var service = new IntegrationWebService();
-                    if (Ayarlar.WebServiceUrl != null && Ayarlar.WebServiceUrl != "")
+                    if (parametreler.WebServiceUrl != null && parametreler.WebServiceUrl != "")
                     {
-                        service.Url = Ayarlar.WebServiceUrl;
+                        service.Url = parametreler.WebServiceUrl;
                     }
 
                     var clsPaketTanim = new List<clsPaketTanim>();
@@ -63,7 +67,7 @@ namespace PanoramaToNetsis
                     string bitisTarihi = ((DateTime)txtBitisTarihi.EditValue).ToString("yyyy-MM-dd");
                     clsPaketTanim.Add(new clsPaketTanim()
                     {
-                        Kriter = "\"BYTDURUM=0 AND LNGDISTKOD IN (" + Ayarlar.WebServiceDistKod +
+                        Kriter = "\"BYTDURUM=0 AND LNGDISTKOD IN (" + parametreler.WebServiceDistKod +
                                  ") AND BYTTIP IN (0, 6, 13, 14) AND TRHISLEMTARIHI BETWEEN '" + baslangicTarihi +
                                  "' AND '" + bitisTarihi + "' \"",
                         Tabloadi = "VIEWTAHSILATGENERIC",
@@ -82,8 +86,8 @@ namespace PanoramaToNetsis
 
                     var entitySet = service.IntegrationGetEntitySetWithPacketLogin(clsPaketTanim.ToArray(),
 
-                        Ayarlar.WebServiceUser, Ayarlar.WebServicePassword, Convert.ToByte(Ayarlar.WebServiceFirmaKod),
-                        Convert.ToInt32(Ayarlar.WebServiceCalismaYili), 216);
+                        parametreler.WebServiceUser, parametreler.WebServicePassword, Convert.ToByte(parametreler.WebServiceFirmaKod),
+                        Convert.ToInt32(parametreler.WebServiceCalismaYili), 216);
 
                     var rslt = entitySet.ResultEntitySet.TahsilatGeneric.ToList();
 
@@ -92,7 +96,7 @@ namespace PanoramaToNetsis
                     var tahsilatlar = rslt.Where(w => !aktarilanlar.Contains(w.Kod.ToString()))
                         .Select(f => new NetsisAktarimModel()
                         {
-                            Tahsilat_ID = f.Kod,
+                            TahsilatID = f.Kod,
                             Tip = f.Tip.Run_(tip =>
                             {
                                 switch (tip)
@@ -113,11 +117,11 @@ namespace PanoramaToNetsis
                                         return f.Tip.ToString();
                                 }
                             }),
-                            Musteri_ID = f.Musterikod,
+                            MusteriID = f.Musterikod,
                             Musteri = f.MusteriAdi,
                             Tutar = Math.Round(Convert.ToDecimal(f.Tutar), 2),
                             //Tutar=f.Tutar,
-                            Fatura_No = f.Makbuzno,
+                            FaturaNo = f.Makbuzno,
                             Kasa = f.BankaLngKod.Run_(ks =>
                             {
                                 switch (f.Tip)
@@ -167,8 +171,8 @@ namespace PanoramaToNetsis
                                 }
                             }),
 
-                            Havale_Hesap_No = f.Kesideyeri.Run_(hvl => { return hvl ?? ""; }),
-                            Temsilci_ID = f.Stkod,
+                            HavaleHesapNo = f.Kesideyeri.Run_(hvl => { return hvl ?? ""; }),
+                            TemsilciID = f.Stkod,
                             Temsilci = satis.FirstOrDefault(st => st.Stkod2 == f.Stkod).Run_(obj =>
                             {
                                 if (obj == null)
@@ -181,8 +185,8 @@ namespace PanoramaToNetsis
                                 }
                             }),
                             Tarih = f.Islemtarihi,
-                            Tip_ID = f.Tip
-                        }).OrderBy(o => o.Tahsilat_ID).ToList();
+                            TipID = f.Tip
+                        }).OrderBy(o => o.TahsilatID).ToList();
 
                     if (tahsilatlar.Count > 0)
                     {
@@ -211,7 +215,7 @@ namespace PanoramaToNetsis
                         mesaj += ex.InnerException.InnerException.Message;
                 }
 
-                Result = new Result(true, 1, "btnTahsilatGetir", mesaj, null);
+                Result = new LogKaydet(true, 1, "btnTahsilatGetir", mesaj, null);
                 lblStatus.Caption = "Hata: " + mesaj;
             }
             finally
@@ -220,9 +224,9 @@ namespace PanoramaToNetsis
             }
         }
 
-        private async void BtnNetsiseAktar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private async void BtnNetsiseAktarClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            var Result = new Result();
+            var Result = new LogKaydet();
             var dal = new DAL();
             PStart();
 
@@ -249,43 +253,43 @@ namespace PanoramaToNetsis
                         string MusteriUnvan = sRow.Musteri.ToString();
                         var tahsilat = new TahsilatModel()
                         {
-                            TahsilatID = sRow.Tahsilat_ID?.ToString(),
-                            CariKodu = sRow.Musteri_ID,
-                            FaturaNo = sRow.Fatura_No,
+                            TahsilatID = sRow.TahsilatID?.ToString(),
+                            CariKodu = sRow.MusteriID,
+                            FaturaNo = sRow.FaturaNo,
                             Tutar = double.Parse(sRow.Tutar.ToString()),
-                            SatisTemsilciKodu = sRow.Temsilci_ID,
+                            SatisTemsilciKodu = sRow.TemsilciID,
                             Tarih = DateTime.Parse(sRow.Tarih.ToString()),
                         };
                         tahsilat.Aciklama = $"{MusteriUnvan} ({tahsilat.CariKodu})";
 
                         lblStatus.Caption = $"{tahsilat.TahsilatID} Nolu tahsilat aktarılıyor";
-                        string TipID = sRow.Tip_ID?.ToString();
-
+                        string TipID = sRow.TipID?.ToString();
+                        var TahsilatKaydet = new Tahsilat();
                         switch (TipID)
                         {
                             case "0":
-                                Result = Tahsilat.Nakit(tahsilat);
+                                Result = TahsilatKaydet.Nakit(tahsilat);
                                 tahsilatTipi = "Nakit";
                                 break;
 
                             case "6":
                                 tahsilat.KrediKartiKasaKodu = sRow.Kasa;
                                 tahsilat.CHAciklama = sRow.Aciklama;
-                                Result = Tahsilat.Kredi_Karti(tahsilat);
+                                Result = TahsilatKaydet.KrediKarti(tahsilat);
                                 tahsilatTipi = "Kredi Kartı";
                                 break;
 
                             case "13":
-                                tahsilat.HesapHavaleKod = sRow.Havale_Hesap_No;
+                                tahsilat.HesapHavaleKod = sRow.HavaleHesapNo;
                                 tahsilat.BankaAdi = sRow.Banka;
-                                Result = Tahsilat.Havale(tahsilat);
+                                Result = TahsilatKaydet.Havale(tahsilat);
                                 tahsilatTipi = "Havale Tahsilat";
                                 break;
 
                             case "14":
-                                tahsilat.HesapHavaleKod = sRow.Havale_Hesap_No;
+                                tahsilat.HesapHavaleKod = sRow.HavaleHesapNo;
                                 tahsilat.BankaAdi = sRow.Banka;
-                                Result = Tahsilat.Havale_Odeme(tahsilat);
+                                Result = TahsilatKaydet.HavaleOdeme(tahsilat);
                                 tahsilatTipi = "Havale Ödeme";
                                 break;
                         }
@@ -337,7 +341,7 @@ namespace PanoramaToNetsis
                         mesaj += ex.InnerException.InnerException.Message;
                 }
 
-                Result = new Result(true, 1, "btnTahsilatListele", mesaj, null);
+                Result = new LogKaydet(true, 1, "btnTahsilatListele", mesaj, null);
 
                 lblStatus.Caption = "Hata: " + mesaj;
             }

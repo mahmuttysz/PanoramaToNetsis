@@ -144,7 +144,7 @@ namespace PanoramaToNetsis
             this.btnTahsilatGetir.Id = 12;
             this.btnTahsilatGetir.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnTahsilatGetir.ImageOptions.SvgImage")));
             this.btnTahsilatGetir.Name = "btnTahsilatGetir";
-            this.btnTahsilatGetir.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnTahsilatGetir_ItemClick);
+            this.btnTahsilatGetir.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnTahsilatGetirClick);
             // 
             // btnNetsiseAktar
             // 
@@ -152,7 +152,7 @@ namespace PanoramaToNetsis
             this.btnNetsiseAktar.Id = 13;
             this.btnNetsiseAktar.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btnNetsiseAktar.ImageOptions.SvgImage")));
             this.btnNetsiseAktar.Name = "btnNetsiseAktar";
-            this.btnNetsiseAktar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnNetsiseAktar_ItemClick);
+            this.btnNetsiseAktar.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BtnNetsiseAktarClick);
             // 
             // lblAktarimDurumu
             // 

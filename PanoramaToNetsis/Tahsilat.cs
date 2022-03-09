@@ -1,377 +1,384 @@
 ﻿using NetOpenX50;
-using PanoramaToNetsis.Model;
+using PanoramaToNetsis.Models;
 using System;
 using System.Runtime.InteropServices;
 
 namespace PanoramaToNetsis
 {
-    public static class Tahsilat
+    public class Tahsilat
     {
-        public static Result Kredi_Karti(TahsilatModel tahsilat)
+        public static ParametreAyarlariModel ParametreAyarlari { get; set; }
+        private static LogKaydet LogKaydetParam { get; set; }
+        private static SirketAyarModel SirketAyarParam { get; set; }
+        private static Kernel KernelParam { get; set; }
+        private static Sirket SirketParam { get; set; }
+        private static Kasa KasaParam { get; set; }
+        private static Dekont DekontAParam { get; set; }
+        private static Dekont DekontBParam { get; set; }
+        private static Dekomas DekomasParam { get; set; }
+
+        public Tahsilat()
         {
-            var Result = new Result();
-            var kernel = new Kernel();
-            var sirket = default(Sirket);
-            var kasa = default(Kasa);
+            var ParametreAyarlar = new ParametreAyarlari();
+            ParametreAyarlari = ParametreAyarlar.Getir();
+            SirketAyarParam = new SirketAyarModel()
+            {
+                TVTTipi = TVTTipi.vtMSSQL,
+                NetsisDBDatabase = ParametreAyarlari.NetsisDBDatabase,
+                NetsisDBPassword = ParametreAyarlari.NetsisDBPassword,
+                NetsisDBUser = ParametreAyarlari.NetsisDBUser,
+                NetsisKullaniciAdi = ParametreAyarlari.NetsisKullaniciAdi,
+                NetsisSifre = ParametreAyarlari.NetsisSifre,
+                NetsisSube = ParametreAyarlari.NetsisSube,
+            };
+            LogKaydetParam = new LogKaydet();
+            KernelParam = new Kernel();
+            SirketParam = default;
+            SirketParam = KernelParam.yeniSirket(SirketAyarParam.TVTTipi, SirketAyarParam.NetsisDBDatabase, SirketAyarParam.NetsisDBUser, SirketAyarParam.NetsisDBPassword, SirketAyarParam.NetsisKullaniciAdi, SirketAyarParam.NetsisSifre, SirketAyarParam.NetsisSube);
+        }
+
+        public LogKaydet KrediKarti(TahsilatModel tahsilat)
+        {
+            KasaParam = default;
+            KasaParam = KernelParam.yeniKasa(SirketParam);
             try
             {
-                sirket = kernel.yeniSirket(TVTTipi.vtMSSQL, Ayarlar.NetsisDBDatabase, Ayarlar.NetsisDBUser, Ayarlar.NetsisDBPassword, Ayarlar.NetsisKullaniciAdi, Ayarlar.NetsisSifre, Ayarlar.NetsisSube);
-                kasa = kernel.yeniKasa(sirket);
+                KasaParam.KsMas_Kod = tahsilat.KrediKartiKasaKodu;
+                KasaParam.IO = "G";
+                KasaParam.Tip = "C";
+                KasaParam.Kod = tahsilat.CariKodu;
+                KasaParam.Fisno = tahsilat.FaturaNo;
+                KasaParam.Tutar = tahsilat.Tutar;
+                KasaParam.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
+                KasaParam.Tarih = tahsilat.Tarih.Date;
+                KasaParam.Aciklama = tahsilat.Aciklama + " (" + tahsilat.CariKodu + ")";
+                KasaParam.CariHareketAciklama = tahsilat.CHAciklama;
+                KasaParam.Islem(TKasaIslem.tkCariOdeme);
 
-                kasa.KsMas_Kod = tahsilat.KrediKartiKasaKodu;
-                kasa.IO = "G";
-                kasa.Tip = "C";
-                kasa.Kod = tahsilat.CariKodu;
-                kasa.Fisno = tahsilat.FaturaNo;
-                kasa.Tutar = tahsilat.Tutar;
-                kasa.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
-                kasa.Tarih = tahsilat.Tarih.Date;
-                kasa.Aciklama = tahsilat.Aciklama + " (" + tahsilat.CariKodu + ")";
-                kasa.CariHareketAciklama = tahsilat.CHAciklama;
-                kasa.Islem(TKasaIslem.tkCariOdeme);
-
-                Result = new Result(false, 0, "Tahsilat.Kredi_Karti", tahsilat.TahsilatID + " Nolu kredi kartı tahsilatı aktarıldı.", null);
+                LogKaydetParam = new LogKaydet(false, 0, "Tahsilat.Kredi_Karti", tahsilat.TahsilatID + " Nolu kredi kartı tahsilatı aktarıldı.", null);
             }
             catch (Exception ex)
             {
-                string mesaj = "Netsis:" + kernel.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
+                string mesaj = "Netsis:" + KernelParam.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
                 if (ex.InnerException != null)
                 {
                     mesaj += " >> " + ex.InnerException.Message;
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Kredi_Karti", tahsilat.TahsilatID + " Nolu kredi kartı tahsilatı aktarılamadı. (" + mesaj + ")", null);
+                LogKaydetParam = new LogKaydet(true, 1, "Tahsilat.Kredi_Karti", tahsilat.TahsilatID + " Nolu kredi kartı tahsilatı aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
-                if (kasa != null)
-                    Marshal.ReleaseComObject(kasa);
-                if (sirket != null)
-                    Marshal.ReleaseComObject(sirket);
-                kernel.FreeNetsisLibrary();
-                if (kernel != null)
-                    Marshal.ReleaseComObject(kernel);
+                if (KasaParam != null)
+                    Marshal.ReleaseComObject(KasaParam);
+                if (SirketParam != null)
+                    Marshal.ReleaseComObject(SirketParam);
+                KernelParam.FreeNetsisLibrary();
+                if (KernelParam != null)
+                    Marshal.ReleaseComObject(KernelParam);
             }
-            return Result;
+            return LogKaydetParam;
         }
 
-        public static Result Nakit(TahsilatModel tahsilat)
+        public LogKaydet Nakit(TahsilatModel tahsilat)
         {
-            var Result = new Result();
-            var kernel = new Kernel();
-            var sirket = default(Sirket);
-            var kasa = default(Kasa);
+            KasaParam = KernelParam.yeniKasa(SirketParam);
             try
             {
-                sirket = kernel.yeniSirket(TVTTipi.vtMSSQL, Ayarlar.NetsisDBDatabase, Ayarlar.NetsisDBUser, Ayarlar.NetsisDBPassword, Ayarlar.NetsisKullaniciAdi, Ayarlar.NetsisSifre, Ayarlar.NetsisSube);
-                kasa = kernel.yeniKasa(sirket);
-
-                kasa.KsMas_Kod = Ayarlar.NetsisNakitKasaKodu;
-                kasa.IO = "G";
-                kasa.Tip = "C";
-                kasa.Kod = tahsilat.CariKodu;
-                kasa.Fisno = tahsilat.FaturaNo;
-                kasa.Tutar = tahsilat.Tutar;
-                kasa.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
-                kasa.Tarih = tahsilat.Tarih.Date;
-                kasa.Aciklama = tahsilat.Aciklama + " (" + tahsilat.CariKodu + ")";
-                kasa.Islem(TKasaIslem.tkCariOdeme);
-                Result = new Result(false, 0, "Tahsilat.Nakit", tahsilat.TahsilatID + " Nolu nakit tahsilatı aktarıldı.", null);
+                KasaParam.KsMas_Kod = ParametreAyarlari.NetsisNakitKasaKodu;
+                KasaParam.IO = "G";
+                KasaParam.Tip = "C";
+                KasaParam.Kod = tahsilat.CariKodu;
+                KasaParam.Fisno = tahsilat.FaturaNo;
+                KasaParam.Tutar = tahsilat.Tutar;
+                KasaParam.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
+                KasaParam.Tarih = tahsilat.Tarih.Date;
+                KasaParam.Aciklama = tahsilat.Aciklama + " (" + tahsilat.CariKodu + ")";
+                KasaParam.Islem(TKasaIslem.tkCariOdeme);
+                LogKaydetParam = new LogKaydet(false, 0, "Tahsilat.Nakit", tahsilat.TahsilatID + " Nolu nakit tahsilatı aktarıldı.", null);
             }
             catch (Exception ex)
             {
-                string mesaj = "Netsis:" + kernel.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
+                string mesaj = "Netsis:" + KernelParam.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
                 if (ex.InnerException != null)
                 {
                     mesaj += " >> " + ex.InnerException.Message;
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Nakit", tahsilat.TahsilatID + " Nolu nakit tahsilatı aktarılamadı. (" + mesaj + ")", null);
+                LogKaydetParam = new LogKaydet(true, 1, "Tahsilat.Nakit", tahsilat.TahsilatID + " Nolu nakit tahsilatı aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
-                if (kasa != null)
-                    Marshal.ReleaseComObject(kasa);
-                if (sirket != null)
-                    Marshal.ReleaseComObject(sirket);
-                kernel.FreeNetsisLibrary();
-                if (kernel != null)
-                    Marshal.ReleaseComObject(kernel);
+                if (KasaParam != null)
+                    Marshal.ReleaseComObject(KasaParam);
+                if (SirketParam != null)
+                    Marshal.ReleaseComObject(SirketParam);
+                KernelParam.FreeNetsisLibrary();
+                if (KernelParam != null)
+                    Marshal.ReleaseComObject(KernelParam);
             }
-            return Result;
+            return LogKaydetParam;
         }
 
-        //public static Result Cek(string Cari_Kodu, string Cek_NO, double Tutar, string Satis_Temsilci_Kodu)
-        //{
-        //    Result Result = new Result();
-        //    Kernel kernel = new Kernel();
-        //    Sirket sirket = default(Sirket);
-        //    Kasa kasa = default(Kasa);
-        //    try
-        //    {
-        //        sirket = kernel.yeniSirket(TVTTipi.vtMSSQL, Ayarlar.Netsis_DB_Database, Ayarlar.Netsis_DB_User, Ayarlar.Netsis_DB_Password, Ayarlar.Netsis_Kullanici_Adi, Ayarlar.Netsis_Sifre, Ayarlar.Netsis_Sube);
-        //        kasa = kernel.yeniKasa(sirket);
-        //        kasa.KsMas_Kod = Ayarlar.Netsis_Cek_Kasa_Kodu;
-        //        kasa.IO = "G";
-        //        kasa.Tip = "E";
-        //        kasa.Fisno = Cek_NO;
-        //        kasa.Cari_Muh = "C";
-        //        kasa.Kod = Cari_Kodu;
-        //        kasa.Plasiyer_Kodu = Satis_Temsilci_Kodu;
-        //        kasa.Tarih = DateTime.Today;
-        //        kasa.CSKOdeme(TCekSenType.csMCEK);
-        //        Result = new Result(false, 0, "Tahsilat.Cek", "Çek tahsilatı Aktarıldı.", null);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string mesaj = "Netsis:" + kernel.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
-        //        if (ex.InnerException != null)
-        //        {
-        //            mesaj += " >> " + ex.InnerException.Message;
-        //            if (ex.InnerException.InnerException != null)
-        //                mesaj += " >> " + ex.InnerException.InnerException.Message;
-        //        }
-        //        Result = new Result(true, 1, "Tahsilat.Cek", mesaj, null);
-        //    }
-        //    finally
-        //    {
-        //        if (kasa != null)
-        //            Marshal.ReleaseComObject(kasa);
-        //        if (sirket != null)
-        //            Marshal.ReleaseComObject(sirket);
-        //        kernel.FreeNetsisLibrary();
-        //        if (kernel != null)
-        //            Marshal.ReleaseComObject(kernel);
-        //    }
-        //    return Result;
-        //}
-
-        //public static Result Senet(string Cari_Kodu, string Senet_NO, double Tutar, string Satis_Temsilci_Kodu)
-        //{
-        //    Result Result = new Result();
-        //    Kernel kernel = new Kernel();
-        //    Sirket sirket = default(Sirket);
-        //    Kasa kasa = default(Kasa);
-        //    try
-        //    {
-        //        kasa = kernel.yeniKasa(sirket);
-        //        kasa.KsMas_Kod = Ayarlar.Netsis_Senet_Kasa_Kodu;
-        //        kasa.IO = "G";
-        //        kasa.Tip = "S";
-        //        kasa.Tutar = Tutar;
-        //        kasa.Fisno = Senet_NO;
-        //        kasa.Cari_Muh = "C";
-        //        kasa.Kod = Cari_Kodu;
-        //        kasa.Plasiyer_Kodu = Satis_Temsilci_Kodu;
-        //        kasa.Tarih = DateTime.Today;
-        //        kasa.CSKOdeme(TCekSenType.csMSEN);
-        //        Result = new Result(false, 0, "Tahsilat.Senet", "Senet tahsilatı Aktarıldı.", null);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string mesaj = "Netsis:" + kernel.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
-        //        if (ex.InnerException != null)
-        //        {
-        //            mesaj += " >> " + ex.InnerException.Message;
-        //            if (ex.InnerException.InnerException != null)
-        //                mesaj += " >> " + ex.InnerException.InnerException.Message;
-        //        }
-        //        Result = new Result(true, 1, "Tahsilat.Senet", mesaj, null);
-        //    }
-        //    finally
-        //    {
-        //        if (kasa != null)
-        //            Marshal.ReleaseComObject(kasa);
-        //        if (sirket != null)
-        //            Marshal.ReleaseComObject(sirket);
-        //        kernel.FreeNetsisLibrary();
-        //        if (kernel != null)
-        //            Marshal.ReleaseComObject(kernel);
-        //    }
-        //    return Result;
-        //}
-
-        public static Result Havale(TahsilatModel tahsilat)
+        public LogKaydet Cek(TahsilatModel tahsilat)
         {
-            var Result = new Result();
-            var kernel = new Kernel();
-            var sirket = default(Sirket);
-            // Dekomas DekSabit = default(Dekomas);
-            var dekontA = default(Dekont);
-            var dekontB = default(Dekont);
-            var DekSabit = default(Dekomas);
+            KasaParam = default;
+          
+            try
+            {
+                KasaParam = KernelParam.yeniKasa(SirketParam);
+                KasaParam.KsMas_Kod = ParametreAyarlari.NetsisCekKasaKodu;
+                KasaParam.IO = "G";
+                KasaParam.Tip = "E";
+                KasaParam.Fisno = tahsilat.CekNo;
+                KasaParam.Cari_Muh = "C";
+                KasaParam.Kod = tahsilat.CariKodu;
+                KasaParam.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
+                KasaParam.Tarih = DateTime.Today;
+                KasaParam.CSKOdeme(TCekSenType.csMCEK);
+                LogKaydetParam = new LogKaydet(false, 0, "Tahsilat.Cek", "Çek tahsilatı Aktarıldı.", null);
+            }
+            catch (Exception ex)
+            {
+                string mesaj = "Netsis:" + KernelParam.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
+                if (ex.InnerException != null)
+                {
+                    mesaj += " >> " + ex.InnerException.Message;
+                    if (ex.InnerException.InnerException != null)
+                        mesaj += " >> " + ex.InnerException.InnerException.Message;
+                }
+                LogKaydetParam = new LogKaydet(true, 1, "Tahsilat.Cek", mesaj, null);
+            }
+            finally
+            {
+                if (KasaParam != null)
+                    Marshal.ReleaseComObject(KasaParam);
+                if (SirketParam != null)
+                    Marshal.ReleaseComObject(SirketParam);
+                KernelParam.FreeNetsisLibrary();
+                if (KernelParam != null)
+                    Marshal.ReleaseComObject(KernelParam);
+            }
+            return LogKaydetParam;
+        }
+
+        public LogKaydet Senet(TahsilatModel tahsilat)
+        {
+
+            KasaParam = default;
+            
+            try
+            {
+                KasaParam = KernelParam.yeniKasa(SirketParam);
+                KasaParam.KsMas_Kod = ParametreAyarlari.NetsisSenetKasaKodu;
+                KasaParam.IO = "G";
+                KasaParam.Tip = "S";
+                KasaParam.Tutar = tahsilat.Tutar;
+                KasaParam.Fisno = tahsilat.SenetNo;
+                KasaParam.Cari_Muh = "C";
+                KasaParam.Kod = tahsilat.CariKodu;
+                KasaParam.Plasiyer_Kodu = tahsilat.SatisTemsilciKodu;
+                KasaParam.Tarih = DateTime.Today;
+                KasaParam.CSKOdeme(TCekSenType.csMSEN);
+                LogKaydetParam = new LogKaydet(false, 0, "Tahsilat.Senet", "Senet tahsilatı Aktarıldı.", null);
+            }
+            catch (Exception ex)
+            {
+                string mesaj = "Netsis:" + KernelParam.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
+                if (ex.InnerException != null)
+                {
+                    mesaj += " >> " + ex.InnerException.Message;
+                    if (ex.InnerException.InnerException != null)
+                        mesaj += " >> " + ex.InnerException.InnerException.Message;
+                }
+                LogKaydetParam = new LogKaydet(true, 1, "Tahsilat.Senet", mesaj, null);
+            }
+            finally
+            {
+                if (KasaParam != null)
+                    Marshal.ReleaseComObject(KasaParam);
+                if (SirketParam != null)
+                    Marshal.ReleaseComObject(SirketParam);
+                KernelParam.FreeNetsisLibrary();
+                if (KernelParam != null)
+                    Marshal.ReleaseComObject(KernelParam);
+            }
+            return LogKaydetParam;
+        }
+
+        public LogKaydet Havale(TahsilatModel tahsilat)
+        {
+           
+            DekontAParam = default;
+            DekontBParam = default;
+            DekomasParam = default;
 
             try
             {
-                sirket = kernel.yeniSirket(TVTTipi.vtMSSQL, Ayarlar.NetsisDBDatabase, Ayarlar.NetsisDBUser, Ayarlar.NetsisDBPassword, Ayarlar.NetsisKullaniciAdi, Ayarlar.NetsisSifre, Ayarlar.NetsisSube);
                 string BA = "B";
 
-                DekSabit = kernel.yeniDekomas(sirket);
-                int DekontNo = DekSabit.YeniNumaraAl("BH");
-                DekSabit.Dekont_No = DekontNo;
-                DekSabit.OtoVadeGunu = false;
-                dekontA = DekSabit.KalemEkle(TDekontTip.dekCari);
-                dekontA.Kod = tahsilat.CariKodu;
-                dekontA.C_M = "C";
-                dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontA.Aciklama1 = tahsilat.BankaAdi + " Gelen Havale";
-                dekontA.ValorGun = 0;
-                dekontA.ValorTrh = tahsilat.Tarih.Date;
-                dekontA.OtoVadeGunuGetir = false;
-                dekontA.DovTL = "T";
-                dekontA.Tutar = tahsilat.Tutar;
-                dekontA.Tarih = tahsilat.Tarih.Date;
-
-                dekontA.Belge_Tipi = "Banka";
-                dekontA.Odeme_Turu = "Havale";
-                dekontA.Plasiyer = tahsilat.SatisTemsilciKodu;
+                DekomasParam = KernelParam.yeniDekomas(SirketParam);
+                int DekontNo = DekomasParam.YeniNumaraAl("BH");
+                DekomasParam.Dekont_No = DekontNo;
+                DekomasParam.OtoVadeGunu = false;
+                DekontAParam = DekomasParam.KalemEkle(TDekontTip.dekCari);
+                DekontAParam.Kod = tahsilat.CariKodu;
+                DekontAParam.C_M = "C";
+                DekontAParam.Fisno = "BH" + DekontNo.ToString();
+                DekontAParam.Aciklama1 = tahsilat.BankaAdi + " Gelen Havale";
+                DekontAParam.ValorGun = 0;
+                DekontAParam.ValorTrh = tahsilat.Tarih.Date;
+                DekontAParam.OtoVadeGunuGetir = false;
+                DekontAParam.DovTL = "T";
+                DekontAParam.Tutar = tahsilat.Tutar;
+                DekontAParam.Tarih = tahsilat.Tarih.Date;
+                DekontAParam.Belge_Tipi = "Banka";
+                DekontAParam.Odeme_Turu = "Havale";
+                DekontAParam.Plasiyer = tahsilat.SatisTemsilciKodu;
                 /////////////////////////////////////////////
-                dekontB = DekSabit.KalemEkle(TDekontTip.dekBanka);
-                dekontB.Kod = tahsilat.HesapHavaleKod;
-                dekontB.C_M = "B";
-                dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontB.Aciklama1 = tahsilat.Aciklama;
-                dekontB.ValorGun = 0;
-                dekontB.ValorTrh = tahsilat.Tarih.Date;
-                dekontB.OtoVadeGunuGetir = false;
-                dekontB.DovTL = "T";
-                dekontB.Tutar = tahsilat.Tutar;
-                dekontB.Tarih = tahsilat.Tarih.Date;
-                dekontB.Belge_Tipi = "Banka";
-                dekontB.Odeme_Turu = "Havale";
-                dekontB.Plasiyer = tahsilat.SatisTemsilciKodu;
+                DekontBParam = DekomasParam.KalemEkle(TDekontTip.dekBanka);
+                DekontBParam.Kod = tahsilat.HesapHavaleKod;
+                DekontBParam.C_M = "B";
+                DekontBParam.Fisno = "BH" + DekontNo.ToString();
+                DekontBParam.Aciklama1 = tahsilat.Aciklama;
+                DekontBParam.ValorGun = 0;
+                DekontBParam.ValorTrh = tahsilat.Tarih.Date;
+                DekontBParam.OtoVadeGunuGetir = false;
+                DekontBParam.DovTL = "T";
+                DekontBParam.Tutar = tahsilat.Tutar;
+                DekontBParam.Tarih = tahsilat.Tarih.Date;
+                DekontBParam.Belge_Tipi = "Banka";
+                DekontBParam.Odeme_Turu = "Havale";
+                DekontBParam.Plasiyer = tahsilat.SatisTemsilciKodu;
                 if (BA == "B")
                 {
-                    dekontA.B_A = "A";
-                    dekontB.B_A = "B";
+                    DekontAParam.B_A = "A";
+                    DekontBParam.B_A = "B";
                 }
                 else
                 {
-                    dekontA.B_A = "B";
-                    dekontB.B_A = "A";
+                    DekontAParam.B_A = "B";
+                    DekontBParam.B_A = "A";
                 }
-                DekSabit.Tamamla();
+                DekomasParam.Tamamla();
 
-                Result = new Result(false, 0, "Tahsilat.Havale", tahsilat.TahsilatID + " Nolu havale tahsilatı aktarıldı.", null);
+                LogKaydetParam = new LogKaydet(false, 0, "Tahsilat.Havale", tahsilat.TahsilatID + " Nolu havale tahsilatı aktarıldı.", null);
             }
             catch (Exception ex)
             {
-                string mesaj = "Netsis:" + kernel.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
+                string mesaj = "Netsis:" + KernelParam.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
                 if (ex.InnerException != null)
                 {
                     mesaj += " >> " + ex.InnerException.Message;
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Havale", tahsilat.TahsilatID + " Nolu havale tahsilatı aktarılamadı. (" + mesaj + ")", null);
+                LogKaydetParam = new LogKaydet(true, 1, "Tahsilat.Havale", tahsilat.TahsilatID + " Nolu havale tahsilatı aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
-                if (DekSabit != null)
-                    Marshal.ReleaseComObject(DekSabit);
-                if (dekontB != null)
-                    Marshal.ReleaseComObject(dekontB);
-                if (dekontA != null)
-                    Marshal.ReleaseComObject(dekontA);
-                if (sirket != null)
-                    Marshal.ReleaseComObject(sirket);
-                kernel.FreeNetsisLibrary();
-                if (kernel != null)
-                    Marshal.ReleaseComObject(kernel);
+                if (DekomasParam != null)
+                    Marshal.ReleaseComObject(DekomasParam);
+                if (DekontBParam != null)
+                    Marshal.ReleaseComObject(DekontBParam);
+                if (DekontAParam != null)
+                    Marshal.ReleaseComObject(DekontAParam);
+                if (SirketParam != null)
+                    Marshal.ReleaseComObject(SirketParam);
+                KernelParam.FreeNetsisLibrary();
+                if (KernelParam != null)
+                    Marshal.ReleaseComObject(KernelParam);
             }
-            return Result;
+            return LogKaydetParam;
         }
 
-        public static Result Havale_Odeme(TahsilatModel tahsilat)
+        public LogKaydet HavaleOdeme(TahsilatModel tahsilat)
         {
-            var Result = new Result();
-            var kernel = new Kernel();
-            var sirket = default(Sirket);
-            // Dekomas DekSabit = default(Dekomas);
-            var dekontA = default(Dekont);
-            var dekontB = default(Dekont);
-            var DekSabit = default(Dekomas);
+          
+            DekontAParam = default;
+            DekontBParam = default;
+            DekomasParam = default;
 
             try
             {
-                sirket = kernel.yeniSirket(TVTTipi.vtMSSQL, Ayarlar.NetsisDBDatabase, Ayarlar.NetsisDBUser, Ayarlar.NetsisDBPassword, Ayarlar.NetsisKullaniciAdi, Ayarlar.NetsisSifre, Ayarlar.NetsisSube);
                 string BA = "C";
 
-                DekSabit = kernel.yeniDekomas(sirket);
-                int DekontNo = DekSabit.YeniNumaraAl("BH");
-                DekSabit.Dekont_No = DekontNo;
-                DekSabit.OtoVadeGunu = false;
-                dekontA = DekSabit.KalemEkle(TDekontTip.dekCari);
-                dekontA.Kod = tahsilat.CariKodu;
-                dekontA.C_M = "C";
-                dekontA.OtoVadeGunuGetir = false;
-                dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontA.Aciklama1 = tahsilat.BankaAdi + " Giden Havale";
-                dekontA.ValorGun = 0;
-                dekontA.ValorTrh = tahsilat.Tarih.Date;
-                dekontA.DovTL = "T";
-                dekontA.Tutar = tahsilat.Tutar;
-                dekontA.Tarih = tahsilat.Tarih.Date;
-                dekontA.Belge_Tipi = "Banka";
-                dekontA.Odeme_Turu = "Havale";
-                dekontA.Plasiyer = tahsilat.SatisTemsilciKodu;
+                DekomasParam = KernelParam.yeniDekomas(SirketParam);
+                int DekontNo = DekomasParam.YeniNumaraAl("BH");
+                DekomasParam.Dekont_No = DekontNo;
+                DekomasParam.OtoVadeGunu = false;
+
+                DekontAParam = DekomasParam.KalemEkle(TDekontTip.dekCari);
+                DekontAParam.Kod = tahsilat.CariKodu;
+                DekontAParam.C_M = "C";
+                DekontAParam.OtoVadeGunuGetir = false;
+                DekontAParam.Fisno = "BH" + DekontNo.ToString();
+                DekontAParam.Aciklama1 = tahsilat.BankaAdi + " Giden Havale";
+                DekontAParam.ValorGun = 0;
+                DekontAParam.ValorTrh = tahsilat.Tarih.Date;
+                DekontAParam.DovTL = "T";
+                DekontAParam.Tutar = tahsilat.Tutar;
+                DekontAParam.Tarih = tahsilat.Tarih.Date;
+                DekontAParam.Belge_Tipi = "Banka";
+                DekontAParam.Odeme_Turu = "Havale";
+                DekontAParam.Plasiyer = tahsilat.SatisTemsilciKodu;
                 /////////////////////////////////////////////
-                dekontB = DekSabit.KalemEkle(TDekontTip.dekBanka);
-                dekontB.Kod = tahsilat.HesapHavaleKod;
-                dekontB.C_M = "B";
-                dekontB.OtoVadeGunuGetir = false;
-                dekontA.Fisno = "BH" + DekontNo.ToString();
-                dekontB.Aciklama1 = tahsilat.Aciklama;
-                dekontB.ValorGun = 0;
-                dekontB.ValorTrh = tahsilat.Tarih.Date;
-                dekontB.DovTL = "T";
-                dekontB.Tutar = tahsilat.Tutar;
-                dekontB.Tarih = tahsilat.Tarih.Date;
-                dekontB.Belge_Tipi = "Banka";
-                dekontB.Odeme_Turu = "Havale";
-                dekontB.Plasiyer = tahsilat.SatisTemsilciKodu;
+                DekontBParam = DekomasParam.KalemEkle(TDekontTip.dekBanka);
+                DekontBParam.Kod = tahsilat.HesapHavaleKod;
+                DekontBParam.C_M = "B";
+                DekontBParam.OtoVadeGunuGetir = false;
+                DekontBParam.Fisno = "BH" + DekontNo.ToString();
+                DekontBParam.Aciklama1 = tahsilat.Aciklama;
+                DekontBParam.ValorGun = 0;
+                DekontBParam.ValorTrh = tahsilat.Tarih.Date;
+                DekontBParam.DovTL = "T";
+                DekontBParam.Tutar = tahsilat.Tutar;
+                DekontBParam.Tarih = tahsilat.Tarih.Date;
+                DekontBParam.Belge_Tipi = "Banka";
+                DekontBParam.Odeme_Turu = "Havale";
+                DekontBParam.Plasiyer = tahsilat.SatisTemsilciKodu;
                 if (BA == "B")
                 {
-                    dekontA.B_A = "A";
-                    dekontB.B_A = "B";
+                    DekontAParam.B_A = "A";
+                    DekontBParam.B_A = "B";
                 }
                 else
                 {
-                    dekontA.B_A = "B";
-                    dekontB.B_A = "A";
+                    DekontAParam.B_A = "B";
+                    DekontBParam.B_A = "A";
                 }
-                DekSabit.Tamamla();
+                DekomasParam.Tamamla();
 
-                Result = new Result(false, 0, "Tahsilat.Havale_Odeme", tahsilat.TahsilatID + " Nolu havale ödemesi aktarıldı.", null);
+                LogKaydetParam = new LogKaydet(false, 0, "Tahsilat.Havale_Odeme", tahsilat.TahsilatID + " Nolu havale ödemesi aktarıldı.", null);
             }
             catch (Exception ex)
             {
-                string mesaj = "Netsis:" + kernel.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
+                string mesaj = "Netsis:" + KernelParam.SonNetsisHata.Detay + "\r\n" + "EX: " + ex.Message;
                 if (ex.InnerException != null)
                 {
                     mesaj += " >> " + ex.InnerException.Message;
                     if (ex.InnerException.InnerException != null)
                         mesaj += " >> " + ex.InnerException.InnerException.Message;
                 }
-                Result = new Result(true, 1, "Tahsilat.Havale_Odeme", tahsilat.TahsilatID + " Nolu havale ödemesi aktarılamadı. (" + mesaj + ")", null);
+                LogKaydetParam = new LogKaydet(true, 1, "Tahsilat.Havale_Odeme", tahsilat.TahsilatID + " Nolu havale ödemesi aktarılamadı. (" + mesaj + ")", null);
             }
             finally
             {
-                if (DekSabit != null)
-                    Marshal.ReleaseComObject(DekSabit);
-                if (dekontB != null)
-                    Marshal.ReleaseComObject(dekontB);
-                if (dekontA != null)
-                    Marshal.ReleaseComObject(dekontA);
-                if (sirket != null)
-                    Marshal.ReleaseComObject(sirket);
-                kernel.FreeNetsisLibrary();
-                if (kernel != null)
-                    Marshal.ReleaseComObject(kernel);
+                if (DekomasParam != null)
+                    Marshal.ReleaseComObject(DekomasParam);
+                if (DekontBParam != null)
+                    Marshal.ReleaseComObject(DekontBParam);
+                if (DekontAParam != null)
+                    Marshal.ReleaseComObject(DekontAParam);
+                if (SirketParam != null)
+                    Marshal.ReleaseComObject(SirketParam);
+                KernelParam.FreeNetsisLibrary();
+                if (KernelParam != null)
+                    Marshal.ReleaseComObject(KernelParam);
             }
-            return Result;
+            return LogKaydetParam;
         }
     }
 }
